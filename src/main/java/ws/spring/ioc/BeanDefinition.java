@@ -1,16 +1,12 @@
 package ws.spring.ioc;
 
+import lombok.Data;
 
+@Data
 public class BeanDefinition {
 
     private Object bean;
-
-    public BeanDefinition(Object obj) {
-        this.bean = obj;
-    }
-
-    public Object getBean() {
-        return bean;
-    }
+    private Class beanClass;
+    private String beanClassName;
 }
 
