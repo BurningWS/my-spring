@@ -1,4 +1,6 @@
-package ws.spring.ioc;
+package ws.spring.ioc.factory;
+
+import ws.spring.ioc.BeanDefinition;
 
 /**
  * Created by wangsong on 16-9-21.

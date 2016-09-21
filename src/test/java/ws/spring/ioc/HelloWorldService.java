@@ -5,7 +5,9 @@ package ws.spring.ioc;
  */
 public class HelloWorldService {
 
+    String text;
+
     public void helloWorld(){
-        System.out.println("Hello World!");
+        System.out.println("Hello World!" + text);
     }
 }
