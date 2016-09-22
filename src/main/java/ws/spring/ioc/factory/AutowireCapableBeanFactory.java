@@ -13,7 +13,7 @@ public class AutowireCapableBeanFactory extends AbstractBeanFactory {
     @Override
     protected Object doCreatBean(BeanDefinition beanDefinition) {
         try {
-            Object bean = createBeanInstance(beanDefinition );
+            Object bean = createBeanInstance(beanDefinition);
             applyPropertyValues(bean, beanDefinition);
             return bean;
         } catch (Exception e) {
