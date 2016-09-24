@@ -4,10 +4,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import ws.spring.ioc.AbstractBeanDefinitionReader;
-import ws.spring.ioc.BeanDefinition;
-import ws.spring.ioc.PropertyValue;
-import ws.spring.ioc.PropertyValues;
+import ws.spring.ioc.*;
 import ws.spring.ioc.io.ResourceLoader;
 
 import java.io.InputStream;
@@ -78,7 +75,19 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         for (Element property : properties) {
             String name = property.attributeValue("name");
             String value = property.attributeValue("value");
-            PropertyValue propertyValue = new PropertyValue(name, value);
+
+            PropertyValue propertyValue;
+            if (value != null) {
+                propertyValue  = new PropertyValue(name, value);
+            } else {
+                String ref = property.attributeValue("ref");
+                if (ref == null) {
+                    throw new IllegalArgumentException("Configuration problem: <property> element for property '"
+                            + name + "' must specify a ref or value");
+                }
+                BeanReference beanReference = new BeanReference(name);
+                propertyValue = new PropertyValue(name, beanReference);
+            }
             propertyValues.addPropertyValue(propertyValue);
         }
 

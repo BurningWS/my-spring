@@ -5,9 +5,12 @@ package ws.spring.ioc;
  */
 public class HelloWorldService {
 
-    String text;
+    private String text;
+
+    private OutputService outputService;
 
     public void helloWorld(){
-        System.out.println("Hello World!" + text);
+        outputService.output(text);
     }
+
 }

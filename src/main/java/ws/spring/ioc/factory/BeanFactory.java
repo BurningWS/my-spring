@@ -1,5 +1,6 @@
 package ws.spring.ioc.factory;
 
+
 import ws.spring.ioc.BeanDefinition;
 
 /**
@@ -7,7 +8,7 @@ import ws.spring.ioc.BeanDefinition;
  */
 public interface BeanFactory {
 
-    void register(String name, BeanDefinition beanDefinition);
+    void registerBeanDefinition(String name, BeanDefinition beanDefinition) throws Exception;
 
-    BeanDefinition getBeanDefinition(String name);
+    Object getBean(String name) throws Exception;
 }

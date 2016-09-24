@@ -1,6 +1,7 @@
 package ws.spring.ioc.factory;
 
 import ws.spring.ioc.BeanDefinition;
+import ws.spring.ioc.BeanReference;
 import ws.spring.ioc.PropertyValue;
 
 import java.lang.reflect.Field;
@@ -11,16 +12,11 @@ import java.lang.reflect.Field;
 public class AutowireCapableBeanFactory extends AbstractBeanFactory {
 
     @Override
-    protected Object doCreatBean(BeanDefinition beanDefinition) {
-        try {
-            Object bean = createBeanInstance(beanDefinition);
-            applyPropertyValues(bean, beanDefinition);
-            return bean;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    protected Object doCreatBean(BeanDefinition beanDefinition) throws Exception {
+        Object bean = createBeanInstance(beanDefinition);
+        beanDefinition.setBean(bean); //解决循环依赖问题
+        applyPropertyValues(bean, beanDefinition);
+        return bean;
     }
 
     //反射创建对象
@@ -32,19 +28,21 @@ public class AutowireCapableBeanFactory extends AbstractBeanFactory {
     }
 
     //添加属性值
-    protected void applyPropertyValues(Object bean, BeanDefinition beanDefinition) {
+    protected void applyPropertyValues(Object bean, BeanDefinition beanDefinition) throws Exception {
         Class beanClass = beanDefinition.getBeanClass();
         for (PropertyValue propertyValue : beanDefinition.getPropertyValues().getPropertyValueList()) {
-            try {
-                Field field = beanClass.getDeclaredField(propertyValue.getName());
-                field.setAccessible(true);
-                field.set(bean, propertyValue.getValue());
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+            Field field = beanClass.getDeclaredField(propertyValue.getName());
+            field.setAccessible(true);
+
+            Object value = propertyValue.getValue(); //属性为简单的String对象
+            if (value instanceof BeanReference) { //引用对象
+                BeanReference ref = (BeanReference) value;
+                value = getBean(ref.getName());
             }
+
+            field.set(bean, value);
         }
     }
-
 }
+
+

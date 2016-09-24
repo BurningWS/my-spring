@@ -14,7 +14,7 @@ import java.util.Set;
 public class BeanFactoryTest {
 
     @Test
-    public void test() {
+    public void test() throws Exception {
         //创建工厂
         AutowireCapableBeanFactory bf = new AutowireCapableBeanFactory();
 
@@ -26,10 +26,13 @@ public class BeanFactoryTest {
         Set<Map.Entry<String, BeanDefinition>> entries = reader.getRegistry().entrySet();
         for (Map.Entry<String, BeanDefinition> entry : entries) {
             //在工厂注册
-            bf.register(entry.getKey(), entry.getValue());
+            bf.registerBeanDefinition(entry.getKey(), entry.getValue());
         }
 
+        //恶汉加载
+        bf.preInstantiateSingletons();
+
         //调用
-        ((HelloWorldService) bf.getBeanDefinition("helloWorldService").getBean()).helloWorld();
+        ((HelloWorldService) bf.getBean("helloWorldService")).helloWorld();
     }
 }

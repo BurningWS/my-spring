@@ -10,6 +10,11 @@
 
     <bean name="helloWorldService" class="ws.spring.ioc.HelloWorldService">
         <property name="text" value="WS!"></property>
+        <property name="outputService" ref="outputService"></property>
+    </bean>
+
+    <bean name="outputService" class="ws.spring.ioc.OutputService">
+        <property name="helloWorldService" ref="helloWorldService"></property>
     </bean>
 
 </beans>
